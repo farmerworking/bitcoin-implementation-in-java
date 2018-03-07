@@ -44,7 +44,15 @@ public class PrivateKeyTest extends TestCase {
         assertEquals(publicKey.getBitcoinAddress(), "1thMirt546nngXqyPEz532S8fLwbozud8");
     }
 
+    /** use www.bitaddress.org wallet details to validate*/
     public void testPrivateKeyGenerate() throws Exception {
-        PrivateKey.generate();
+        PrivateKey privateKey = PrivateKey.generate();
+        System.out.println(privateKey.toHex());
+        System.out.println(privateKey.toWIFCompressed());
+        System.out.println(privateKey.toWIF());
+
+        PublicKey publicKey = privateKey.getPublicKey();
+        System.out.println(publicKey.toHex());
+        System.out.println(publicKey.getBitcoinAddress());
     }
 }
