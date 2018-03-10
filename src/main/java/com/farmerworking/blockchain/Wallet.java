@@ -7,10 +7,15 @@ import java.util.Iterator;
 import com.farmerworking.blockchain.util.Util;
 import com.google.common.base.Splitter;
 import com.google.common.primitives.Bytes;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bitcoinj.crypto.PBKDF2SHA512;
 
 public class Wallet {
     public static final Integer DEFAULT_ENTROPY_LENGTH_IN_BITS = 256;
+
+    public static final String SALT_PREFIX = "mnemonic";
 
     public static String[] generateWords(String entropyHex) throws DecoderException {
         String[] result = new String[24];
@@ -27,6 +32,11 @@ public class Wallet {
         }
 
         return result;
+    }
+
+    public static byte[] toSeed(String passphrase, String[] input) {
+        String pass = String.join(" ", Arrays.asList(input));
+        return PBKDF2SHA512.derive(pass, SALT_PREFIX + passphrase, 2048, 64);
     }
 
     private static byte[] getEntropyWithChecksum(String entropyHex) throws DecoderException {
